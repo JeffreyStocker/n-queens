@@ -1,5 +1,4 @@
-// This file is a Backbone Model (don't worry about what that means)
-// It's part of the Board Visualizer
+// This file is a Backbone Model (don't worry about what that means) // It's part of the Board Visualizer
 // The only portions you need to work on are the helper functions (below)
 
 (function() {
@@ -78,13 +77,33 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
-    hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+    hasRowConflictAt: function(rowIndex) {      
+      var currentRow = this.rows()[rowIndex];
+      var numberOnRowThatDefinesAConflict = 2;
+      var totalFound = 0;
+           
+      for (var i = 0; i < currentRow.length; i++) {
+        
+        if (currentRow[i] > 0) {
+          totalFound++;
+        }
+      }
+      return (totalFound >= numberOnRowThatDefinesAConflict) ? true : false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var board = this.rows();
+      var result = [];
+      
+      // loop through the rows with hasRowConflictAt
+      for (var i = 0; i < board.length; i++) {
+        if (this.hasRowConflictAt(i)) {
+          return true;
+        }
+      } 
+
+      return false;
     },
 
 
@@ -94,12 +113,33 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var board = this.rows();
+      var numberOnColThatDefinesAConflict = 2;
+      var totalFound = 0;
+           
+      for (var i = 0; i < board.length; i++) {
+        
+        if (board[i][colIndex] > 0) {
+          totalFound++;
+        }
+      }
+      return (totalFound >= numberOnColThatDefinesAConflict) ? true : false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      var board = this.rows();
+      var result = [];
+      var numberOfCol = board[0].length;
+      
+      // loop through the rows with hasRowConflictAt
+      for (var i = 0; i < numberOfCol; i++) {
+        if (this.hasColConflictAt(i)) {
+          return true;
+        }
+      } 
+
+      return false;
     },
 
 
