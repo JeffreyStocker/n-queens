@@ -149,13 +149,85 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var board = this.rows();
+      var found = 1;
+      var currentCount = 0;
+      
+      var nextCell = board[1][1];
+        
+      
+      //inspect first cell, if value there, then add to found
+        //while next position is not undefined
+          //inspect next cell,
+            // if value there then add to found//
+          //set next x, y for next cell ++
+          //nextCell = board [y, x];
+          
+      //compare found 
+        // greater than 1, then return true is conflict
+        //else return false no conflict
+      if (board[0][0] > 0 ) {
+        found++;
+      }
+      
+      while (nextCell !== undefined) {
+        if (nextCell > 0) {
+          found++;
+        }
+        if (found > 1) {
+          return true;
+        }
+        currentCount++;
+        nextCell = board [currentCount][currentCount];
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
-    hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+    hasAnyMajorDiagonalConflicts: function(foundCount = 0) {
+            //note this is in the bottom right direction
+      // or southeast direction
+      var board = this.rows();
+      
+      // var coordPosition = board[0][0];  //board[y][x]
+      // var checkPosition = board[1][1];
+      
+      //var next check position is board[2][2]
+      
+      //psudocode //SP!!!!!  /////////////////////
+       // for loop throught Y for each row
+        // for loop through x for each coloumn 
+          //start at posit [0][0]
+          //look to major diangol ie [1,1]
+            // is the there a conflict directly 
+              //true
+            //if there is previous value recorded
+              //return true
+            // else 
+              //recoursion into the next spot with check to make it valid
+              // else return false/
+      ////////////////////////////////////
+      
+      
+      // for (var y = 0; y < board.length; y++) {
+      //   for (var x = 0; x < board[0].length; x++) {
+          var checkPosition = board[y][x];
+          // if (position === checkPosition) {
+          //   return true
+          if (checkPosition > 0 && foundCount > 0) {
+            return true;
+          } else if (checkPosition > 0) {
+            foundCount++;
+          } else {
+            this.hasAnyMajorDiagonalConflicts (foundCount);
+          }
+        }
+      }
+
+      // return false; // fixme
     },
+    
+    
 
 
 
