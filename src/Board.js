@@ -149,39 +149,7 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      //ifnspect first cell, if value there, then add to found
-        //while next position is not undefined
-          //inspect next cell,
-            // if value there then add to found//
-          //set next x, y for next cell ++
-          //nextCell = board [y, x];
-          
-      ////////refactored to not use below  
-      var board = this.rows();
-      var found = 0;
-      var currentCount = 0;
-      
-      var nextCell = board[1][1];
-
-      ////compare found 
-      //  // greater than 1, then return true is conflict
-      //  //else return false no conflict
-      //// if (board[0][0] > 0 ) {
-      ////   found++;
-      //// }
-      //
-      //// while (nextCell !== undefined) {
-      ////   if (nextCell > 0) {
-      ////     found++;
-      ////   }
-      ////   if (found > 1) {
-      ////     return true;
-      ////   }
-      ////   currentCount++;
-      ////   nextCell = board [currentCount][currentCount];
-      //// }
-      //// return false;
-      
+      //use helper function at the first row at columnIndex      
       return checkMajorDiagonalAtPosition(0, majorDiagonalColumnIndexAtFirstRow);
     },
 
@@ -213,14 +181,6 @@
       
       for (var y = 0; y < board.length; y++) {
         for (var x = 0; x < board[0].length; x++) {
-          // var checkPosition = board[y][x];
-          // // if (position === checkPosition) {
-          // //   return true
-          // if (checkPosition > 0 && foundCount > 0) {
-          //   return true;
-          // } else if (checkPosition > 0) {
-          //   foundCount++;
-          // }
           if (this.checkMajorDiagonalAtPosition (y, x) === true) {
             return true;
           }
