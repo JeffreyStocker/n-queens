@@ -29,7 +29,7 @@ window.findNRooksSolution = function(n) {
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
-window.countNRooksSolutions = function(n) {
+window.countNRooksSolutionsStoreForNow = function(n) {
   var board = new Board({'n': n});
   var boardMap = board.rows();
   //helper function provides solution for position provided
@@ -41,9 +41,13 @@ window.countNRooksSolutions = function(n) {
     for (var x = 0; x < boardMap[0].length; x++) {
       board.togglePiece(y, x);
       var potentialSolution = findRookSolutionAtPosition(x, y, board);
+      //is a solution then recursing into the iteration of boards
+        //push iteration return to output
+      //else not a solution then remove piece to next spot
+      //
     }
   }
-  
+  //if at end of the board then return current board as a solution
   
   var solutionCount = undefined; //fixme
   //return the number of unique solutions
@@ -51,12 +55,9 @@ window.countNRooksSolutions = function(n) {
   return solutionCount;
 };
 
-window.countNRooksSolutionsRecursive1 = function (n, prevBoard) {
-  if (!prevBoard) {
-    var board = new Board({'n': n});  
-  } else {
-    var board = prevBoard;
-  }
+window.countNRooksSolutions = function (n) {
+  var board = new Board({'n': n});  
+  console.log (n);
   
   var boardMap = board.rows();
   var evaluatedSolutions = [];
@@ -69,38 +70,56 @@ window.countNRooksSolutionsRecursive1 = function (n, prevBoard) {
     //repete the recursion
   //still going to have problems when we get past a certain point in the board
   // maybe have a check for previes spot and if it finds a valid point at a previous point cancel the recusion as it would have found that already.
+  
+  
+  var innerfunction = function (board) {
+    var output = [];
+    var boardMap = board.rows();
+    console.log (boardMap);
+    //also need to calculate the next spot in the grid
+    for (var y = 0; y < boardMap.length; y++) {
+      for (var x = 0; x < boardMap[0].length; x++) {
+        
+        var currentPositionValue = boardMap[y][x];
+        if (currentPositionValue !== 0) {
+          continue;
+        }
+        board.togglePiece(y, x);
+        console.log(board.rows());
+        //if hasAnyRooksConflicts is true
+        if (board.hasAnyRooksConflicts()) {
+          board.togglePiece(y, x);          
+          continue;
+        } else {
+          output.concat(innerfunction(board));
+          ////NOTE DON"T FORGET TO DO SOMETHINBG WITH OUTPUT
+        }
+      }
+    }  
+    output.push(board);
+    return output;
+  };
+  
+  
   for (var y = 0; y < boardMap.length; y++) {
     for (var x = 0; x < boardMap[0].length; x++) {
       board.togglePiece(y, x);
       
       /// check for previous possible solution spots here
       //if valid 
-      var tempSolution = innerfunction(board, x, y);
-      evaluatedSolutions.push(tempSolution);
-      //else
+      console.log ('board', board);
+      var tempSolution = innerfunction(board);
+      tempSolution.forEach (function (individualBoard) {
+        if (!individualBoard.hasAnyRooksConflicts()) {
+          evaluatedSolutions.concat(individualBoard);
+        } 
+      });
+      
       board.togglePiece(x, y);
     }
   }
-  
-  
-  var innerfunction = function (board, x, y) {
-    //also need to calculate the next spot in the grid
-    for (y; y < boardMap.length; y++) {
-      for (x; x < boardMap[0].length; x++) {
-        board.togglePiece(y, x);
-        //if hasAnyRooksConflicts is true
-        if (!board.hasAnyRooksConflicts()) {
-        //if false, keep the piece on
-        //reverse togglePiece
-          board.togglePiece(board, y, x);        
-        } else {
-          //recursive innerfunction
-        }
-      }
-    }  
-    return board;
-  };
-  
+  console.log ('total Solution: ', evaluatedSolutions.length);
+  return evaluatedSolutions.length;
 };
 
 window.findRookSolutionAtPosition = function (y, x, currentBoard) {
