@@ -149,38 +149,40 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      var board = this.rows();
-      var found = 1;
-      var currentCount = 0;
-      
-      var nextCell = board[1][1];
-        
-      
-      //inspect first cell, if value there, then add to found
+      //ifnspect first cell, if value there, then add to found
         //while next position is not undefined
           //inspect next cell,
             // if value there then add to found//
           //set next x, y for next cell ++
           //nextCell = board [y, x];
           
-      //compare found 
-        // greater than 1, then return true is conflict
-        //else return false no conflict
-      if (board[0][0] > 0 ) {
-        found++;
-      }
+      ////////refactored to not use below  
+      var board = this.rows();
+      var found = 0;
+      var currentCount = 0;
       
-      while (nextCell !== undefined) {
-        if (nextCell > 0) {
-          found++;
-        }
-        if (found > 1) {
-          return true;
-        }
-        currentCount++;
-        nextCell = board [currentCount][currentCount];
-      }
-      return false;
+      var nextCell = board[1][1];
+
+      ////compare found 
+      //  // greater than 1, then return true is conflict
+      //  //else return false no conflict
+      //// if (board[0][0] > 0 ) {
+      ////   found++;
+      //// }
+      //
+      //// while (nextCell !== undefined) {
+      ////   if (nextCell > 0) {
+      ////     found++;
+      ////   }
+      ////   if (found > 1) {
+      ////     return true;
+      ////   }
+      ////   currentCount++;
+      ////   nextCell = board [currentCount][currentCount];
+      //// }
+      //// return false;
+      
+      return checkMajorDiagonalAtPosition(0, majorDiagonalColumnIndexAtFirstRow);
     },
 
     // test if any major diagonals on this board contain conflicts
@@ -188,7 +190,7 @@
             //note this is in the bottom right direction
       // or southeast direction
       var board = this.rows();
-      
+      var output = false;
       // var coordPosition = board[0][0];  //board[y][x]
       // var checkPosition = board[1][1];
       
@@ -209,26 +211,57 @@
       ////////////////////////////////////
       
       
-      // for (var y = 0; y < board.length; y++) {
-      //   for (var x = 0; x < board[0].length; x++) {
-          var checkPosition = board[y][x];
-          // if (position === checkPosition) {
-          //   return true
-          if (checkPosition > 0 && foundCount > 0) {
+      for (var y = 0; y < board.length; y++) {
+        for (var x = 0; x < board[0].length; x++) {
+          // var checkPosition = board[y][x];
+          // // if (position === checkPosition) {
+          // //   return true
+          // if (checkPosition > 0 && foundCount > 0) {
+          //   return true;
+          // } else if (checkPosition > 0) {
+          //   foundCount++;
+          // }
+          if (this.checkMajorDiagonalAtPosition (y, x) === true) {
             return true;
-          } else if (checkPosition > 0) {
-            foundCount++;
-          } else {
-            this.hasAnyMajorDiagonalConflicts (foundCount);
           }
         }
       }
 
-      // return false; // fixme
+      return false; // fixme
     },
     
-    
-
+    checkMajorDiagonalAtPosition (columnIndex, rowIndex) {
+      //inspect first cell, if value there, then add to found
+        //while next position is not undefined
+          //inspect next cell,
+            // if value there then add to found//
+          //set next x, y for next cell ++
+          //nextCell = board [y, x];
+          
+      //compare found 
+        // greater than 1, then return true is conflict
+        //else return false no conflict
+      
+      var board = this.rows();
+      var found = 0;
+      var nextCell = board[columnIndex][rowIndex];
+      while (nextCell !== undefined) {
+        if (nextCell > 0) {
+          found++;
+        }
+        if (found > 1) {
+          return true;
+        }
+        columnIndex++;
+        rowIndex++;
+        if (board[columnIndex] === undefined) {
+          break;
+        }
+        nextCell = board[columnIndex][rowIndex];
+        
+      }
+      return false; 
+    },
 
 
     // Minor Diagonals - go from top-right to bottom-left
@@ -236,13 +269,59 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      return checkMinorDiagonalAtPosition(0, minorDiagonalColumnIndexAtFirstRow);
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
-    }
+      /// note this is a refactor of hasAnyMajorDiagonalConflicts
+      var board = this.rows();
+      var output = false;
+      
+      for (var y = 0; y < board.length; y++) {
+        for (var x = 0; x < board[0].length; x++) {
+          if (this.checkMinorDiagonalAtPosition (y, x) === true) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    },
+
+    checkMinorDiagonalAtPosition (columnIndex, rowIndex) {
+      //inspect first cell, if value there, then add to found
+        //while next position is not undefined
+          //inspect next cell,
+            // if value there then add to found//
+          //set next x, y for next cell ++
+          //nextCell = board [y, x];
+          
+      //compare found 
+        // greater than 1, then return true is conflict
+        //else return false no conflict
+      
+      var board = this.rows();
+      var found = 0;
+      var nextCell = board[columnIndex][rowIndex];
+      while (nextCell !== undefined) {
+        if (nextCell > 0) {
+          found++;
+        }
+        if (found > 1) {
+          return true;
+        }
+        columnIndex++;
+        rowIndex--;
+        if (board[columnIndex] === undefined) {
+          break;
+        }
+        nextCell = board[columnIndex][rowIndex];
+        
+      }
+      return false; 
+    },
+
 
     /*--------------------  End of Helper Functions  ---------------------*/
 
