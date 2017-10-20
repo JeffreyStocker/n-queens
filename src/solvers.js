@@ -28,6 +28,64 @@ window.findNRooksSolution = function(n) {
   return solution;
 };
 
+window.countNRooksSolutions = function(n) {
+  var solutionCount = 0;
+  
+  
+
+  return solutionCount;
+};
+
+
+// window.countNRooksSolutions = function(n) {
+//   // Make a board
+//   var board = new Board({'n': 3});
+//   var boardMap = board.rows();
+//   // Make an array to store every solution board
+//   var possibleSolutions = [];
+
+//     // board.togglePiece(0, 0);
+//     // board.togglePiece(0, 0);
+//     console.log ('piece', board.rows());
+
+//   // Drop piece onto the board
+//   for (var y = 0; y < boardMap.length; y++) {
+//     for (var x = 0; x < boardMap[0].length; x++) {
+//       // Drop first piece onto the board in outer loop
+//       console.log('My first piece :', y, x);
+//       console.log('before place first piece', board);
+
+//       console.log('after place first piece', board);
+//       // Drop second piece onto board in inner loop
+//       for (var i = 0; i < boardMap.length; i++) {
+//         for (var j = 0; j < boardMap[0].length; j++) {
+//           board.togglePiece(i, j);
+//           possibleSolutions.push(board);
+//           console.log('After push', board);
+//           board.togglePiece(i, j); // reverse dropping the 2nd piece
+//         }
+//       }
+//       board.togglePiece(y, x); // remove the first piece
+//     }
+//   }
+  
+// // console.log('Solution total:', possibleSolutions.length);
+// // debugger;
+//   var totalSolutions = possibleSolutions.reduce(function(accumulator, solution) {
+//       console.log(!solution.hasAnyRooksConflicts());
+//     if (!solution.hasAnyRooksConflicts()) {
+//       accumulator = accumulator + 1;
+//       return accumulator;
+//     }
+//   }, 0);
+  
+//   console.log('DONE!!!');
+//   return totalSolutions;
+// };
+
+
+
+
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutionsStoreForNow = function(n) {
   var board = new Board({'n': n});
@@ -55,12 +113,18 @@ window.countNRooksSolutionsStoreForNow = function(n) {
   return solutionCount;
 };
 
+
+
+
 window.countNRooksSolutions = function (n) {
-  var board = new Board({'n': n});  
-  console.log (n);
+  var board = new Board({'n': 5});  
+  console.log ('Board size: ', n);
   
   var boardMap = board.rows();
   var evaluatedSolutions = [];
+
+  console.log ('This', board.rows())
+    debugger;
   //build board
   //then set first piece
     // recursive into the next iterations, where it finds the next valid peice
@@ -72,55 +136,87 @@ window.countNRooksSolutions = function (n) {
   // maybe have a check for previes spot and if it finds a valid point at a previous point cancel the recusion as it would have found that already.
   
   
-  var innerfunction = function (board) {
+  var innerFunction = function (board, counter = 0) {
+    counter++;
+    console.log('Loop #', counter);
     var output = [];
     var boardMap = board.rows();
-    console.log (boardMap);
-    //also need to calculate the next spot in the grid
+
+    // Begin placing pieces on the grid
     for (var y = 0; y < boardMap.length; y++) {
       for (var x = 0; x < boardMap[0].length; x++) {
-        
+        // console.log('"My Y & X: ', y, x);
         var currentPositionValue = boardMap[y][x];
         if (currentPositionValue !== 0) {
           continue;
         }
-        board.togglePiece(y, x);
+        // console.log('I am in the loop');
+        console.log('I am placing the second piece at :', y, x );
+        // board.togglePiece(y, x);
+        // board.togglePiece(1,1);
         console.log(board.rows());
+        
+        // console.log(board.rows());
         //if hasAnyRooksConflicts is true
+        console.log(board.hasAnyRooksConflicts());
+        
+        console.log(board.rows());
+        // DONE PLACING PIECES
+        // Check if the grid has Rook Conflicts:        
         if (board.hasAnyRooksConflicts()) {
-          board.togglePiece(y, x);          
+          // board.togglePiece(y, x);   //untoggles the piece        
           continue;
+        } else if (!board.hasAnyRooksConflicts()) {
+        // } else if (y === boardMap.length - 1 && x === boardMap[0].length - 1) {
+          output.push(board);        
         } else {
-          output.concat(innerfunction(board));
+          var temp = innerFunction(board, counter);
+          console.log('Board before push ', temp);
+          output.push(board);
+          // output.push(innerFunction(board));
           ////NOTE DON"T FORGET TO DO SOMETHINBG WITH OUTPUT
         }
       }
-    }  
-    output.push(board);
+    }
+        
+    // output.push(board);
+    output = _.flatten(output);  
     return output;
-  };
-  
+  };  
   
   for (var y = 0; y < boardMap.length; y++) {
-    for (var x = 0; x < boardMap[0].length; x++) {
+    for (var x = 1; x < boardMap[0].length; x++) {
+      console.log('I am in the main body');
+      console.log('I am placing the first piece');
       board.togglePiece(y, x);
       
       /// check for previous possible solution spots here
-      //if valid 
-      console.log ('board', board);
-      var tempSolution = innerfunction(board);
+      var tempSolution = innerFunction(board);
+
       tempSolution.forEach (function (individualBoard) {
+        console.log ('Board At test Time: ', board);
         if (!individualBoard.hasAnyRooksConflicts()) {
-          evaluatedSolutions.concat(individualBoard);
+          
+          evaluatedSolutions.push(individualBoard);
         } 
       });
       
-      board.togglePiece(x, y);
+      // board.togglePiece(y, x);
     }
   }
   console.log ('total Solution: ', evaluatedSolutions.length);
   return evaluatedSolutions.length;
 };
+
+
+
+
+
+
+
+
+
+
 
 window.findRookSolutionAtPosition = function (y, x, currentBoard) {
   
