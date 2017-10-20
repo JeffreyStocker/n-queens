@@ -70,6 +70,7 @@ window.findNQueensSolution = function(n) {
   var n = 5;
   var board = new Board({'n': n});  
   var matrix = board.rows();
+  var queenCount = 0
   
   var queenRowToggler = function(y, x) {
     console.log(matrix);
@@ -93,6 +94,9 @@ window.findNQueensSolution = function(n) {
   var queenMajorDiagToggler = function(y, x) {
     //take the row in the board, then in eachone toggle x if there is notthing there
     for (y, x; y < n, x < n; y++, x++) {
+      if (y === 4 || x === 4){
+        // debugger;
+      }
       console.log(y, x);
       if (matrix[y][x] !== 1) {
         matrix[y][x] = 'x';
@@ -121,7 +125,7 @@ window.findNQueensSolution = function(n) {
       for (var x = 0; x < n; x++ ) {
         if (matrix[y][x] !== 'x' || matrix[y][x] !== 1) {
           matrix[y][x] = 1;
-          toggler(y ,x);
+          toggler(y, x);
         }
       }
     }
@@ -144,6 +148,9 @@ window.findNQueensSolution = function(n) {
     
     //remove all x's - change to 0's
     // return a matrix
+    if (queenCount === n) {
+      var output = matrix;
+      }
   }
 };
 
